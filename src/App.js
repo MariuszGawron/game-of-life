@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { auth } from "./firebaseConfig";
+import SignIn from "./components/Auth/SignIn";
+import SignOut from "./components/Auth/SignOut";
+import Game from "./components/Game/Game";
+import Rules from "./components/Rules/Rules";
 
-function App() {
+const App = () => {
+  const [rules, setRules] = useState({
+    minNeighbors: 2,
+    maxNeighbors: 3,
+    birthNeighbors: 3,
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <SignOut />
+      <SignIn />
+      {auth.currentUser && (
+        <div>
+          <Rules rules={rules} setRules={setRules} />
+          <Game rules={rules} />
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default App;
