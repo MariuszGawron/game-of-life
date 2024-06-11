@@ -1,12 +1,21 @@
 import React from "react";
-import Cell from "./Cell";
+import Cell from "./Cell"; // Upewnij się, że ścieżka jest poprawna
 
-const Grid = ({ grid, toggleCell }) => {
+const Grid = ({ cells, toggleCell }) => {
+  // Upewnij się, że cells jest zainicjowane jako tablica
+  if (!cells || cells.length === 0) {
+    return <p>Loading...</p>; // Lub inny komunikat, który chcesz wyświetlić
+  }
+
   return (
-    <div className="grid">
-      {grid.map((row, rowIndex) =>
-        row.map((cell, colIndex) => <Cell key={`${rowIndex}-${colIndex}`} isAlive={cell} toggleCell={() => toggleCell(rowIndex, colIndex)} />)
-      )}
+    <div>
+      {cells.map((row, rowIndex) => (
+        <div key={rowIndex} className="row">
+          {row.map((cell, cellIndex) => (
+            <Cell key={cellIndex} isAlive={cell === 1} toggleCell={() => toggleCell(rowIndex, cellIndex)} />
+          ))}
+        </div>
+      ))}
     </div>
   );
 };

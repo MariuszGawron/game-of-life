@@ -22,6 +22,10 @@ const Rules = ({ rules, setRules }) => {
         Sąsiedztwo do narodzin:
         <input type="number" value={rules.birthNeighbors} onChange={(e) => updateRule("birthNeighbors", e.target.value)} />
       </label>
+      <label>
+        Prędkość:
+        <input type="range" min={10} max={1000} step={10} value={rules.timeTick} onChange={(e) => updateRule("timeTick", e.target.value)} />
+      </label>
     </div>
   );
 };

@@ -10,19 +10,19 @@ const App = () => {
     minNeighbors: 2,
     maxNeighbors: 3,
     birthNeighbors: 3,
+    timeTick: 1000,
   });
 
   return (
+    // <div>
+    //   <SignIn />
+    //   {auth.currentUser && (
     <div>
-      <SignOut />
-      <SignIn />
-      {auth.currentUser && (
-        <div>
-          <Rules rules={rules} setRules={setRules} />
-          <Game rules={rules} />
-        </div>
-      )}
+      <Rules rules={rules} setRules={setRules} />
+      <Game rules={rules} />
     </div>
+    //     )}
+    //   </div>
   );
 };
 
