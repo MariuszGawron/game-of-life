@@ -4,6 +4,9 @@ import Grid from "./Grid";
 const createGrid = (rows, cols) => {
   return Array.from({ length: rows }, () => Array.from({ length: cols }, () => (Math.random() > 0.8 ? 1 : 0)));
 };
+const clearGrid = (rows, cols) => {
+  return Array.from({ length: rows }, () => Array.from({ length: cols }, () => 0));
+};
 
 const Game = ({ rules }) => {
   const [grid, setGrid] = useState(createGrid(rules.gridSize, rules.gridSize));
@@ -14,15 +17,6 @@ const Game = ({ rules }) => {
     const newGrid = grid.map((r, rowIndex) => r.map((c, colIndex) => (rowIndex === row && colIndex === col ? (c === 1 ? 0 : 1) : c)));
     setGrid(newGrid);
   };
-
-  useEffect(() => {
-    if (isRunning) {
-      const interval = setInterval(() => {
-        setGrid((prev) => nextGeneration(prev, rules.birthRule, rules.survivalRule));
-      }, rules.timeTick); // Ustawienie interwału z rules.timeTick
-      return () => clearInterval(interval);
-    }
-  }, [isRunning, rules.timeTick, rules.birthRule, rules.survivalRule]); // Aktualizacja rules.timeTick, rules.birthRule i rules.survivalRule zmian zasad
 
   //Następna generacja - generowanie kolejnego widoku planszy
   const nextGeneration = (grid, birthRule, survivalRule) => {
@@ -63,10 +57,21 @@ const Game = ({ rules }) => {
     return newGrid;
   };
 
+  useEffect(() => {
+    if (isRunning) {
+      const interval = setInterval(() => {
+        setGrid((prev) => nextGeneration(prev, rules.birthRule, rules.survivalRule));
+      }, rules.timeTick); // Ustawienie interwału z rules.timeTick
+      return () => clearInterval(interval);
+    }
+  }, [isRunning, rules.timeTick, rules.birthRule, rules.survivalRule]); // Aktualizacja rules.timeTick, rules.birthRule i rules.survivalRule zmian zasad
+
   return (
     <div>
       <button onClick={() => setIsRunning(!isRunning)}>{isRunning ? "Stop" : "Start"}</button>
-      <button onClick={() => setGrid(createGrid(rules.gridSize, rules.gridSize))}>Reset</button>
+      <button onClick={() => setGrid(createGrid(rules.gridSize, rules.gridSize))}>Losuj</button>
+      <button onClick={() => setGrid(clearGrid(rules.gridSize, rules.gridSize))}>Czyść</button>
+      <button onClick={() => setGrid((prev) => nextGeneration(prev, rules.birthRule, rules.survivalRule))}>Następna generacja</button>
       <Grid cells={grid} toggleCell={toggleCell} cellSize={rules.cellSize} setIsMouseDown={setIsMouseDown} isMouseDown={isMouseDown} />
     </div>
   );

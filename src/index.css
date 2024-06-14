@@ -9,6 +9,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
+.main {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
+
 .cell {
   border: 1px solid #ccc;
   background-color: white;
@@ -24,6 +30,9 @@ code {
 
 .rules {
   margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-content: end;
 }
 
 label {

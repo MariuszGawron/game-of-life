@@ -18,7 +18,7 @@ const App = () => {
     // <div>
     //   <SignIn />
     //   {auth.currentUser && (
-    <div>
+    <div className="main">
       <Rules rules={rules} setRules={setRules} />
       <Game rules={rules} />
     </div>

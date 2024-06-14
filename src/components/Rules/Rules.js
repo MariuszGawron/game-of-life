@@ -27,42 +27,36 @@ const Rules = ({ rules, setRules }) => {
 
   return (
     <div className="rules">
+      <label>
+        Prędkość:
+        <input type="range" min={1} max={1000} step={1} value={rules.timeTick} onChange={(e) => updateRule("timeTick", e.target.value)} />
+      </label>
+      <label>
+        Wielkość planszy:
+        <input type="number" min={10} max={100} step={1} value={rules.gridSize} onChange={(e) => updateRule("gridSize", e.target.value)} />
+      </label>
+      <label>
+        Rozmiar komórek:
+        <input type="number" min={5} max={50} step={1} value={rules.cellSize} onChange={(e) => updateRule("cellSize", e.target.value)} />
+      </label>
       <div>
-        <label>
-          Prędkość:
-          <input type="range" min={10} max={1000} step={10} value={rules.timeTick} onChange={(e) => updateRule("timeTick", e.target.value)} />
-        </label>
-        <label>
-          Wielkość planszy:
-          <input type="number" min={10} max={100} step={1} value={rules.gridSize} onChange={(e) => updateRule("gridSize", e.target.value)} />
-        </label>
-        <label>
-          Rozmiar komórek:
-          <input type="number" min={5} max={50} step={1} value={rules.cellSize} onChange={(e) => updateRule("cellSize", e.target.value)} />
-        </label>
-      </div>
-      <div>
-        <div>
-          <label>Sąsiedzi do urodzenia:</label>
-          <div id="birthRuleContainer">
-            {Array.from({ length: 9 }, (_, i) => (
-              <label key={`birth-${i}`}>
-                {i}
-                <input type="checkbox" value={i} checked={birthRule.includes(i)} onChange={(e) => handleCheckboxChange("birthRule", e.target.value)} />
-              </label>
-            ))}
-          </div>
+        <label>Sąsiedzi do urodzenia:</label>
+        <div id="birthRuleContainer">
+          {Array.from({ length: 9 }, (_, i) => (
+            <label key={`birth-${i}`}>
+              {i}
+              <input type="checkbox" value={i} checked={birthRule.includes(i)} onChange={(e) => handleCheckboxChange("birthRule", e.target.value)} />
+            </label>
+          ))}
         </div>
-        <div>
-          <label>Sąsiedzi do przeżycia:</label>
-          <div id="survivalRuleContainer">
-            {Array.from({ length: 9 }, (_, i) => (
-              <label key={`survival-${i}`}>
-                {i}
-                <input type="checkbox" value={i} checked={survivalRule.includes(i)} onChange={(e) => handleCheckboxChange("survivalRule", e.target.value)} />
-              </label>
-            ))}
-          </div>
+        <label>Sąsiedzi do przeżycia:</label>
+        <div id="survivalRuleContainer">
+          {Array.from({ length: 9 }, (_, i) => (
+            <label key={`survival-${i}`}>
+              {i}
+              <input type="checkbox" value={i} checked={survivalRule.includes(i)} onChange={(e) => handleCheckboxChange("survivalRule", e.target.value)} />
+            </label>
+          ))}
         </div>
       </div>
     </div>
