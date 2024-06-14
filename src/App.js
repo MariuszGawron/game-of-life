@@ -7,10 +7,11 @@ import Rules from "./components/Rules/Rules";
 
 const App = () => {
   const [rules, setRules] = useState({
-    minNeighbors: 2,
-    maxNeighbors: 3,
-    birthNeighbors: 3,
-    timeTick: 1000,
+    timeTick: 500,
+    gridSize: 50,
+    birthRule: [3],
+    survivalRule: [2, 3],
+    cellSize: 10,
   });
 
   return (

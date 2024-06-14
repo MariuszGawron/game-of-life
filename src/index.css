@@ -10,8 +10,6 @@ code {
 }
 
 .cell {
-  width: 20px;
-  height: 20px;
   border: 1px solid #ccc;
   background-color: white;
 }
@@ -22,4 +20,12 @@ code {
 
 .row {
   display: table-cell;
+}
+
+.rules {
+  margin: 10px;
+}
+
+label {
+  margin-right: 10px;
 }

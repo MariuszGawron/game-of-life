@@ -1,18 +1,18 @@
 import React from "react";
-import Cell from "./Cell"; // Upewnij się, że ścieżka jest poprawna
+import Cell from "./Cell";
 
-const Grid = ({ cells, toggleCell }) => {
-  // Upewnij się, że cells jest zainicjowane jako tablica
-  if (!cells || cells.length === 0) {
-    return <p>Loading...</p>; // Lub inny komunikat, który chcesz wyświetlić
-  }
-
+const Grid = ({ cells, toggleCell, cellSize, isMouseDown, setIsMouseDown }) => {
   return (
-    <div>
+    <div
+      className="grid"
+      style={{ display: "flex", gridTemplateColumns: `repeat(${cells[0].length}, ${cellSize}px)`, justifyContent: "center" }}
+      onMouseDown={() => setIsMouseDown(true)}
+      onMouseUp={() => setIsMouseDown(false)}
+    >
       {cells.map((row, rowIndex) => (
         <div key={rowIndex} className="row">
           {row.map((cell, cellIndex) => (
-            <Cell key={cellIndex} isAlive={cell === 1} toggleCell={() => toggleCell(rowIndex, cellIndex)} />
+            <Cell key={cellIndex} cellSize={cellSize} isAlive={cell === 1} toggleCell={() => toggleCell(rowIndex, cellIndex)} isMouseDown={isMouseDown} />
           ))}
         </div>
       ))}
