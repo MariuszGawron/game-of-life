@@ -8,6 +8,7 @@ const Grid = ({ cells, toggleCell, cellSize, isMouseDown, setIsMouseDown }) => {
       style={{ display: "flex", gridTemplateColumns: `repeat(${cells[0].length}, ${cellSize}px)`, justifyContent: "center" }}
       onMouseDown={() => setIsMouseDown(true)}
       onMouseUp={() => setIsMouseDown(false)}
+      onMouseLeave={() => setIsMouseDown(false)}
     >
       {cells.map((row, rowIndex) => (
         <div key={rowIndex} className="row">
