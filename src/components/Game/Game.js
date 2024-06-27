@@ -16,9 +16,23 @@ const createGenerationCountsGrid = (rows, cols) => {
   return Array.from({ length: rows }, () => Array.from({ length: cols }, () => 0));
 };
 
+const resizeGrid = (oldGrid, newRows, newCols) => {
+  const newGrid = Array.from({ length: newRows }, (_, row) =>
+    Array.from({ length: newCols }, (_, col) => (oldGrid[row] && oldGrid[row][col] !== undefined ? oldGrid[row][col] : 0))
+  );
+  return newGrid;
+};
+
+const resizeGenerationCountsGrid = (oldGrid, newRows, newCols) => {
+  const newGrid = Array.from({ length: newRows }, (_, row) =>
+    Array.from({ length: newCols }, (_, col) => (oldGrid[row] && oldGrid[row][col] !== undefined ? oldGrid[row][col] : 0))
+  );
+  return newGrid;
+};
+
 const Game = ({ rules }) => {
-  const [grid, setGrid] = useState(createGrid(rules.gridSize, rules.gridSize));
-  const [generationCountsGrid, setGenerationCountsGrid] = useState(createGenerationCountsGrid(rules.gridSize, rules.gridSize));
+  const [grid, setGrid] = useState(() => createGrid(rules.gridHeight, rules.gridWidth));
+  const [generationCountsGrid, setGenerationCountsGrid] = useState(() => createGenerationCountsGrid(rules.gridHeight, rules.gridWidth));
   const [isRunning, setIsRunning] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [generationsCount, setGenerationsCount] = useState(0);
@@ -97,9 +111,10 @@ const Game = ({ rules }) => {
         setIsMouseDown={setIsMouseDown}
         isMouseDown={isMouseDown}
         colors={rules.colors}
+        lines={rules.drawGridLines}
       />
     ),
-    [grid, generationCountsGrid, toggleCell, rules.cellSize, isMouseDown, rules.colors]
+    [grid, generationCountsGrid, toggleCell, rules.cellSize, isMouseDown, rules.colors, rules.drawGridLines]
   );
 
   // Efekt używający interwału do automatycznego generowania następnych generacji
@@ -107,15 +122,18 @@ const Game = ({ rules }) => {
     if (isRunning) {
       const interval = setInterval(() => {
         setGenerationsCount((prevGenerationsCount) => prevGenerationsCount + 1);
-        setGrid((prevGrid) => {
-          const nextGrid = nextGeneration(prevGrid, rules.birthRule, rules.survivalRule);
-          return nextGrid;
-        });
+        setGrid((prevGrid) => nextGeneration(prevGrid, rules.birthRule, rules.survivalRule));
       }, rules.timeTick);
 
       return () => clearInterval(interval);
     }
   }, [isRunning, nextGeneration, rules.birthRule, rules.timeTick, rules.survivalRule]);
+
+  // Efekt używający zmiany rozmiaru siatki
+  useEffect(() => {
+    setGrid((prevGrid) => resizeGrid(prevGrid, rules.gridHeight, rules.gridWidth));
+    setGenerationCountsGrid((prevGrid) => resizeGenerationCountsGrid(prevGrid, rules.gridHeight, rules.gridWidth));
+  }, [rules.gridHeight, rules.gridWidth]);
 
   // Funkcja obsługująca kliknięcie przycisku "Następna generacja"
   const handleNextGeneration = () => {
@@ -124,21 +142,21 @@ const Game = ({ rules }) => {
   };
   // Funkcja obsługująca kliknięcie przycisku "Losuj"
   const handleShuffle = () => {
-    setGenerationsCount((prevGenerationsCount) => (prevGenerationsCount = 0));
-    setGrid(createGrid(rules.gridSize, rules.gridSize));
-    setGenerationCountsGrid(createGenerationCountsGrid(rules.gridSize, rules.gridSize));
+    setGenerationsCount(0);
+    setGrid(createGrid(rules.gridHeight, rules.gridWidth));
+    setGenerationCountsGrid(createGenerationCountsGrid(rules.gridHeight, rules.gridWidth));
   };
   // Funkcja obsługująca kliknięcie przycisku "Czyść"
   const handleClear = () => {
-    setGenerationsCount((prevGenerationsCount) => (prevGenerationsCount = 0));
-    setGrid(clearGrid(rules.gridSize, rules.gridSize));
-    setGenerationCountsGrid(createGenerationCountsGrid(rules.gridSize, rules.gridSize));
+    setGenerationsCount(0);
+    setGrid(clearGrid(rules.gridHeight, rules.gridWidth));
+    setGenerationCountsGrid(createGenerationCountsGrid(rules.gridHeight, rules.gridWidth));
   };
 
   // Renderowanie komponentu gry
   return (
     <div className="main-grid">
-      <div>
+      <div className="flex">
         <button onClick={() => setIsRunning(!isRunning)}>{isRunning ? "Stop" : "Start"}</button>
         <button onClick={handleShuffle}>Losuj</button>
         <button onClick={handleClear}>Czyść</button>

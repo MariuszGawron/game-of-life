@@ -8,8 +8,9 @@ import Rules from "./components/Rules/Rules";
 const App = () => {
   // Stan początkowy zasad gry
   const [rules, setRules] = useState({
-    timeTick: 500,
-    gridSize: 50,
+    timeTick: 100,
+    gridHeight: 50,
+    gridWidth: 50,
     birthRule: [3],
     survivalRule: [2, 3],
     cellSize: 10,
@@ -24,7 +25,7 @@ const App = () => {
   return (
     <div className="main">
       {/* Komponent zasad gry */}
-      <Rules rules={rules} setRules={setRules} gridSize={rules.gridSize} />
+      <Rules rules={rules} setRules={setRules} />
       {/* Komponent gry */}
       <Game rules={rules} />
     </div>

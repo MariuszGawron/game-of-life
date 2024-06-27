@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
 
-const GameCanvas = ({ grid, generationCountsGrid, cellSize, toggleCell, setIsMouseDown, isMouseDown, colors }) => {
+const GameCanvas = ({ grid, generationCountsGrid, cellSize, toggleCell, setIsMouseDown, isMouseDown, colors, lines }) => {
   const canvasRef = useRef(null);
   const [changedCells, setChangedCells] = useState(new Set());
 
@@ -89,8 +89,10 @@ const GameCanvas = ({ grid, generationCountsGrid, cellSize, toggleCell, setIsMou
     canvas.height = grid.length * cellSize;
 
     drawGrid();
-    drawGridLines();
-  }, [grid, cellSize, drawGrid, drawGridLines]);
+    if (lines) {
+      drawGridLines();
+    }
+  }, [grid, cellSize, drawGrid, drawGridLines, lines]);
 
   const handleMouseDown = (e) => {
     const canvas = canvasRef.current;
