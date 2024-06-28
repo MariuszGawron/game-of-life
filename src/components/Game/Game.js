@@ -16,6 +16,7 @@ const createGenerationCountsGrid = (rows, cols) => {
   return Array.from({ length: rows }, () => Array.from({ length: cols }, () => 0));
 };
 
+// Funkcja do zmiany wielkości siatki
 const resizeGrid = (oldGrid, newRows, newCols) => {
   const newGrid = Array.from({ length: newRows }, (_, row) =>
     Array.from({ length: newCols }, (_, col) => (oldGrid[row] && oldGrid[row][col] !== undefined ? oldGrid[row][col] : 0))
@@ -23,6 +24,7 @@ const resizeGrid = (oldGrid, newRows, newCols) => {
   return newGrid;
 };
 
+// Funkcja do zmiany wielkości siatki pomocniczej do liczenia przeżytych generacji
 const resizeGenerationCountsGrid = (oldGrid, newRows, newCols) => {
   const newGrid = Array.from({ length: newRows }, (_, row) =>
     Array.from({ length: newCols }, (_, col) => (oldGrid[row] && oldGrid[row][col] !== undefined ? oldGrid[row][col] : 0))
@@ -101,6 +103,7 @@ const Game = ({ rules }) => {
     [generationCountsGrid]
   );
 
+  //Rysowanie canvasa, bo przy obsłudze 10 000 divów przeglądarka miała ciężko
   const canvasComponent = useMemo(
     () => (
       <GameCanvas
@@ -117,7 +120,7 @@ const Game = ({ rules }) => {
     [grid, generationCountsGrid, toggleCell, rules.cellSize, isMouseDown, rules.colors, rules.drawGridLines]
   );
 
-  // Efekt używający interwału do automatycznego generowania następnych generacji
+  // Generowanie następnych generacji
   useEffect(() => {
     if (isRunning) {
       const interval = setInterval(() => {
@@ -152,6 +155,33 @@ const Game = ({ rules }) => {
     setGrid(clearGrid(rules.gridHeight, rules.gridWidth));
     setGenerationCountsGrid(createGenerationCountsGrid(rules.gridHeight, rules.gridWidth));
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      switch (e.key) {
+        case "a":
+          setIsRunning(!isRunning);
+          break;
+        case "s":
+          handleShuffle();
+          break;
+        case "d":
+          handleClear();
+          break;
+        case "f":
+          handleNextGeneration();
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [setIsRunning, handleShuffle, handleClear, handleNextGeneration]);
 
   // Renderowanie komponentu gry
   return (

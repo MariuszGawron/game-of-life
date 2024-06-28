@@ -4,6 +4,7 @@ const GameCanvas = ({ grid, generationCountsGrid, cellSize, toggleCell, setIsMou
   const canvasRef = useRef(null);
   const [changedCells, setChangedCells] = useState(new Set());
 
+  //Wyliczanie ładnych kolorków na podstawie kolorów na najbliższych prograch dla przeżytych generacji komórek
   const interpolateColor = (color1, color2, factor) => {
     const result = color1.slice();
     for (let i = 0; i < 3; i++) {
@@ -49,7 +50,7 @@ const GameCanvas = ({ grid, generationCountsGrid, cellSize, toggleCell, setIsMou
     return rgbToHex(interpolatedRgb);
   };
 
-  // Funkcja rysująca siatkę
+  // Funkcja rysująca komórki
   const drawGrid = useCallback(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -64,7 +65,7 @@ const GameCanvas = ({ grid, generationCountsGrid, cellSize, toggleCell, setIsMou
     }
   }, [grid, cellSize, generationCountsGrid, colors]);
 
-  // Funkcja rysująca linie siatki
+  // Funkcja rysująca linie siatki, zależna od checkboxa, domyślnie wyłączona
   const drawGridLines = useCallback(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -94,6 +95,7 @@ const GameCanvas = ({ grid, generationCountsGrid, cellSize, toggleCell, setIsMou
     }
   }, [grid, cellSize, drawGrid, drawGridLines, lines]);
 
+  //Wykrywanie naciśnięcia myszki i przesuwania, do zmiany wartości komórek
   const handleMouseDown = (e) => {
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
@@ -102,13 +104,13 @@ const GameCanvas = ({ grid, generationCountsGrid, cellSize, toggleCell, setIsMou
     const row = Math.floor(y / cellSize);
     const col = Math.floor(x / cellSize);
     toggleCell(row, col);
-    setChangedCells(new Set([`${row},${col}`])); // Reset changed cells
+    setChangedCells(new Set([`${row},${col}`]));
     setIsMouseDown(true);
   };
 
   const handleMouseUp = () => {
     setIsMouseDown(false);
-    setChangedCells(new Set()); // Reset changed cells
+    setChangedCells(new Set());
   };
 
   const handleMouseMove = (e) => {
