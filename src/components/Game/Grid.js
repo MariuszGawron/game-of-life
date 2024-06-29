@@ -4,7 +4,6 @@ import Cell from "./Cell";
 const Grid = ({ cells, toggleCell, cellSize, isMouseDown, setIsMouseDown }) => {
   return (
     <div
-      className="grid"
       style={{ display: "flex", gridTemplateColumns: `repeat(${cells[0].length}, ${cellSize}px)`, justifyContent: "center" }}
       onMouseDown={() => setIsMouseDown(true)}
       onMouseUp={() => setIsMouseDown(false)}

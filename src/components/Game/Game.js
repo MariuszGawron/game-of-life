@@ -67,7 +67,7 @@ const Game = ({ rules }) => {
   }, [isRunning, rules.timeTick, rules.birthRule, rules.survivalRule]); // Aktualizacja rules.timeTick, rules.birthRule i rules.survivalRule zmian zasad
 
   return (
-    <div>
+    <div className="grid">
       <button onClick={() => setIsRunning(!isRunning)}>{isRunning ? "Stop" : "Start"}</button>
       <button onClick={() => setGrid(createGrid(rules.gridSize, rules.gridSize))}>Losuj</button>
       <button onClick={() => setGrid(clearGrid(rules.gridSize, rules.gridSize))}>Czyść</button>
