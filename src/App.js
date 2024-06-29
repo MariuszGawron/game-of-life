@@ -1,6 +1,6 @@
-import { auth } from "./firebaseConfig";
-import SignIn from "./components/Auth/SignIn";
-import SignOut from "./components/Auth/SignOut";
+// import { auth } from "./firebaseConfig";
+// import SignIn from "./components/Auth/SignIn";
+// import SignOut from "./components/Auth/SignOut";
 import React, { useState } from "react";
 import Game from "./components/Game/Game";
 import Rules from "./components/Rules/Rules";

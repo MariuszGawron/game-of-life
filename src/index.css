@@ -64,11 +64,11 @@ input {
   margin: 5px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .range {
-  width: 175px;
+  width: 160px;
   transform: rotate(180deg);
 }
 
@@ -96,9 +96,6 @@ p {
   color: #62aefb;
   min-width: 250px;
   margin: 0;
-}
-
-.grid {
 }
 
 label {
