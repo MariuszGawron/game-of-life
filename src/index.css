@@ -10,9 +10,13 @@ code {
 }
 
 .main {
+  background-color: #033e7a;
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
+  width: 100vw;
+  height: 100vh;
+  min-width: 1100px;
 }
 
 .cell {
@@ -33,11 +37,118 @@ code {
   display: flex;
   flex-direction: column;
   align-content: end;
+  min-width: 300px;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex2 {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.input-width {
+  width: 40px;
+}
+
+input {
+  margin: 0 5px;
+}
+
+.main-grid {
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.range {
+  width: 175px;
+  transform: rotate(180deg);
+}
+
+.select {
+  width: 175px;
+}
+
+span {
+  font-family: Arial;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 6px 24px;
+  margin: 0 5px 5px 5px;
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #528ecc;
+  color: #62aefb;
+  min-width: 250px;
+}
+p {
+  font-family: Arial;
+  font-size: 12px;
+  font-weight: normal;
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #528ecc;
+  color: #62aefb;
+  min-width: 250px;
+  margin: 0;
 }
 
 .grid {
 }
 
 label {
-  margin-right: 10px;
+  font-family: Arial;
+  font-size: 13px;
+  font-weight: bold;
+  margin: 5px 0;
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #528ecc;
+  color: #62aefb;
+}
+
+button {
+  box-shadow: inset 0px 1px 0px 0px #bbdaf7;
+  background: linear-gradient(to bottom, #79bbff 5%, #378de5 100%);
+  background-color: #79bbff;
+  border-radius: 6px;
+  border: 1px solid #84bbf3;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: Arial;
+  font-size: 15px;
+  font-weight: bold;
+  padding: 6px 24px;
+  margin: 0 5px 5px 5px;
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #528ecc;
+}
+button:hover {
+  background: linear-gradient(to bottom, #378de5 5%, #79bbff 100%);
+  background-color: #378de5;
+}
+button:active {
+  position: relative;
+  top: 1px;
+}
+
+input,
+select {
+  border: 3px solid #84bbf3;
+  border-style: solid;
+  font-size: 15px;
+  padding: 3px;
+  border-radius: 6px;
+}
+input:focus {
+  outline: none;
+}
+
+canvas {
+  border: 1px solid #84bbf3;
 }
