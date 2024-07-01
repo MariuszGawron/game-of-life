@@ -335,14 +335,14 @@ const Rules = ({ rules, setRules }) => {
         ))}
       </div>
       <label>Skróty klawiszowe:</label>
-      <p>
+      <div>
         {shortcuts.map((shortcut) => (
-          <>
+          <p key={shortcut.key}>
             {shortcut.key} - {shortcut.description}
             <br></br>
-          </>
+          </p>
         ))}
-      </p>
+      </div>
     </div>
   );
 };
