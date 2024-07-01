@@ -63,7 +63,7 @@ const GameCanvas = ({ grid, generationCountsGrid, cellSize, toggleCell, setIsMou
         ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
       }
     }
-  }, [grid, cellSize, generationCountsGrid, colors]);
+  }, [grid, cellSize, generationCountsGrid, getColor]);
 
   // Funkcja rysująca linie siatki, zależna od checkboxa, domyślnie wyłączona
   const drawGridLines = useCallback(() => {
@@ -79,11 +79,10 @@ const GameCanvas = ({ grid, generationCountsGrid, cellSize, toggleCell, setIsMou
         ctx.strokeRect(col * cellSize, row * cellSize, cellSize, cellSize);
       }
     }
-  }, [grid.length, grid[0].length, cellSize]);
+  }, [grid, cellSize]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
 
     // Ustaw rozmiar canvas
     canvas.width = grid[0].length * cellSize;

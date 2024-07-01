@@ -51,6 +51,9 @@ const Game = ({ rules }) => {
     });
   }, []);
 
+  //Maksymalny próg, po którym nastąpi reset licznika dla komórki
+  const getMaxThreshold = Math.max(...rules.colors.map((color) => color.threshold));
+
   // Funkcja generująca następną generację
   const nextGeneration = useCallback(
     (grid, birthRule, survivalRule) => {
@@ -84,7 +87,11 @@ const Game = ({ rules }) => {
           // Użyj reguł gry w życie do ustalenia nowego stanu komórki
           if (cell === 1 && survivalRule.includes(neighbors)) {
             newRow.push(1);
-            newCountRow.push(generationCountsGrid[row][col] + 1);
+            if (generationCountsGrid[row][col] >= getMaxThreshold) {
+              newCountRow.push(1);
+            } else {
+              newCountRow.push(generationCountsGrid[row][col] + 1);
+            }
           } else if (cell === 0 && birthRule.includes(neighbors)) {
             newRow.push(1);
             newCountRow.push(1);
@@ -181,7 +188,7 @@ const Game = ({ rules }) => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [setIsRunning, handleShuffle, handleClear, handleNextGeneration]);
+  }, [setIsRunning, isRunning, handleShuffle, handleClear, handleNextGeneration]);
 
   // Renderowanie komponentu gry
   return (
