@@ -10,7 +10,7 @@ const App = () => {
   const [rules, setRules] = useState({
     timeTick: 100,
     maxTimeTick: 1000,
-    minTimeTick: 10,
+    minTimeTick: 1,
     gridHeight: 50,
     gridWidth: 50,
     birthRule: [3],
