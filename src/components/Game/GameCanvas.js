@@ -5,50 +5,53 @@ const GameCanvas = ({ grid, generationCountsGrid, cellSize, toggleCell, setIsMou
   const [changedCells, setChangedCells] = useState(new Set());
 
   //Wyliczanie ładnych kolorków na podstawie kolorów na najbliższych prograch dla przeżytych generacji komórek
-  const interpolateColor = (color1, color2, factor) => {
+  const interpolateColor = useCallback((color1, color2, factor) => {
     const result = color1.slice();
     for (let i = 0; i < 3; i++) {
       result[i] = Math.round(result[i] + factor * (color2[i] - color1[i]));
     }
     return result;
-  };
+  }, []);
 
-  const hexToRgb = (hex) => {
+  const hexToRgb = useCallback((hex) => {
     const bigint = parseInt(hex.slice(1), 16);
     return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
-  };
+  }, []);
 
-  const rgbToHex = (rgb) => {
+  const rgbToHex = useCallback((rgb) => {
     return `#${((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1).toUpperCase()}`;
-  };
+  }, []);
 
-  const getColor = (generationsCount) => {
-    if (!colors || colors.length === 0) return "black"; // Domyślny kolor, jeśli brak danych
+  const getColor = useCallback(
+    (generationsCount) => {
+      if (!colors || colors.length === 0) return "black"; // Domyślny kolor, jeśli brak danych
 
-    // Sortuj kolory według progu
-    const sortedColors = colors.slice().sort((a, b) => a.threshold - b.threshold);
+      // Sortuj kolory według progu
+      const sortedColors = colors.slice().sort((a, b) => a.threshold - b.threshold);
 
-    // Znajdź odpowiednie kolory do interpolacji
-    let lowerColor = sortedColors[0];
-    let upperColor = sortedColors[sortedColors.length - 1];
+      // Znajdź odpowiednie kolory do interpolacji
+      let lowerColor = sortedColors[0];
+      let upperColor = sortedColors[sortedColors.length - 1];
 
-    for (let i = 0; i < sortedColors.length - 1; i++) {
-      if (generationsCount >= sortedColors[i].threshold && generationsCount < sortedColors[i + 1].threshold) {
-        lowerColor = sortedColors[i];
-        upperColor = sortedColors[i + 1];
-        break;
+      for (let i = 0; i < sortedColors.length - 1; i++) {
+        if (generationsCount >= sortedColors[i].threshold && generationsCount < sortedColors[i + 1].threshold) {
+          lowerColor = sortedColors[i];
+          upperColor = sortedColors[i + 1];
+          break;
+        }
       }
-    }
 
-    // Oblicz współczynnik interpolacji
-    const factor = (generationsCount - lowerColor.threshold) / (upperColor.threshold - lowerColor.threshold);
+      // Oblicz współczynnik interpolacji
+      const factor = (generationsCount - lowerColor.threshold) / (upperColor.threshold - lowerColor.threshold);
 
-    const lowerRgb = hexToRgb(lowerColor.color);
-    const upperRgb = hexToRgb(upperColor.color);
+      const lowerRgb = hexToRgb(lowerColor.color);
+      const upperRgb = hexToRgb(upperColor.color);
 
-    const interpolatedRgb = interpolateColor(lowerRgb, upperRgb, factor);
-    return rgbToHex(interpolatedRgb);
-  };
+      const interpolatedRgb = interpolateColor(lowerRgb, upperRgb, factor);
+      return rgbToHex(interpolatedRgb);
+    },
+    [colors, hexToRgb, interpolateColor, rgbToHex]
+  );
 
   // Funkcja rysująca komórki
   const drawGrid = useCallback(() => {

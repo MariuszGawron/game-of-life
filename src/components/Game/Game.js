@@ -52,7 +52,7 @@ const Game = ({ rules }) => {
   }, []);
 
   //Maksymalny próg, po którym nastąpi reset licznika dla komórki
-  const getMaxThreshold = Math.max(...rules.colors.map((color) => color.threshold));
+  const getMaxThreshold = useMemo(() => Math.max(...rules.colors.map((color) => color.threshold)), [rules.colors]);
 
   // Funkcja generująca następną generację
   const nextGeneration = useCallback(
@@ -107,7 +107,7 @@ const Game = ({ rules }) => {
       setGenerationCountsGrid(newGenerationCountsGrid);
       return newGrid;
     },
-    [generationCountsGrid]
+    [generationCountsGrid, getMaxThreshold]
   );
 
   //Rysowanie canvasa, bo przy obsłudze 10 000 divów przeglądarka miała ciężko
@@ -146,28 +146,30 @@ const Game = ({ rules }) => {
   }, [rules.gridHeight, rules.gridWidth]);
 
   // Funkcja obsługująca kliknięcie przycisku "Następna generacja"
-  const handleNextGeneration = () => {
+  const handleNextGeneration = useCallback(() => {
     setGenerationsCount((prevGenerationsCount) => prevGenerationsCount + 1);
     setGrid((prevGrid) => nextGeneration(prevGrid, rules.birthRule, rules.survivalRule));
-  };
+  }, [nextGeneration, rules.birthRule, rules.survivalRule]);
+
   // Funkcja obsługująca kliknięcie przycisku "Losuj"
-  const handleShuffle = () => {
+  const handleShuffle = useCallback(() => {
     setGenerationsCount(0);
     setGrid(createGrid(rules.gridHeight, rules.gridWidth));
     setGenerationCountsGrid(createGenerationCountsGrid(rules.gridHeight, rules.gridWidth));
-  };
+  }, [rules.gridHeight, rules.gridWidth]);
+
   // Funkcja obsługująca kliknięcie przycisku "Czyść"
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
     setGenerationsCount(0);
     setGrid(clearGrid(rules.gridHeight, rules.gridWidth));
     setGenerationCountsGrid(createGenerationCountsGrid(rules.gridHeight, rules.gridWidth));
-  };
+  }, [rules.gridHeight, rules.gridWidth]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
       switch (e.key) {
         case "a":
-          setIsRunning(!isRunning);
+          setIsRunning((prevIsRunning) => !prevIsRunning);
           break;
         case "s":
           handleShuffle();
@@ -188,13 +190,13 @@ const Game = ({ rules }) => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [setIsRunning, isRunning, handleShuffle, handleClear, handleNextGeneration]);
+  }, [handleShuffle, handleClear, handleNextGeneration]);
 
   // Renderowanie komponentu gry
   return (
     <div className="main-grid">
       <div className="flex">
-        <button onClick={() => setIsRunning(!isRunning)}>{isRunning ? "Stop" : "Start"}</button>
+        <button onClick={() => setIsRunning((prevIsRunning) => !prevIsRunning)}>{isRunning ? "Stop" : "Start"}</button>
         <button onClick={handleShuffle}>Losuj</button>
         <button onClick={handleClear}>Czyść</button>
         <button onClick={handleNextGeneration}>Następna generacja</button>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 const Rules = ({ rules, setRules }) => {
   const [birthRule, setBirthRule] = useState(rules.birthRule || [3]);
@@ -14,6 +14,7 @@ const Rules = ({ rules, setRules }) => {
       { threshold: 300, color: "#0000ff" },
       { threshold: 400, color: "#00ffff" },
       { threshold: 500, color: "#ffff00" },
+      { threshold: 600, color: "#000000" },
     ]
   );
   const shortcuts = [
@@ -81,54 +82,63 @@ const Rules = ({ rules, setRules }) => {
   const maxH = Math.floor((window.innerHeight - 50) / rules.cellSize);
 
   //Ustawuenie szerokości canvasa (ilość kolumn)
-  const handleGridWidthChange = (newGridWidth) => {
-    const parsedGridWidth = parseInt(newGridWidth, 10);
-    setGridWidth(parsedGridWidth);
-    setRules((prev) => ({ ...prev, gridWidth: parsedGridWidth }));
-  };
+  const handleGridWidthChange = useCallback(
+    (newGridWidth) => {
+      const parsedGridWidth = parseInt(newGridWidth, 10);
+      setGridWidth(parsedGridWidth);
+      setRules((prev) => ({ ...prev, gridWidth: parsedGridWidth }));
+    },
+    [setRules]
+  );
 
-  const increaseWidth = () => {
+  const increaseWidth = useCallback(() => {
     if (gridWidth < maxW) {
       handleGridWidthChange(gridWidth + 1);
     } else {
       handleGridWidthChange(maxW);
     }
-  };
+  }, [gridWidth, maxW, handleGridWidthChange]);
 
-  const decreaseWidth = () => {
+  const decreaseWidth = useCallback(() => {
     if (gridWidth > 10) {
       handleGridWidthChange(gridWidth - 1);
     }
-  };
+  }, [gridWidth, handleGridWidthChange]);
 
   //Ustawuenie wysokości canvasa (ilość wierszy)
-  const handleGridHeightChange = (newGridHeight) => {
-    const parsedGridHeight = parseInt(newGridHeight, 10);
-    setGridHeight(parsedGridHeight);
-    setRules((prev) => ({ ...prev, gridHeight: parsedGridHeight }));
-  };
+  const handleGridHeightChange = useCallback(
+    (newGridHeight) => {
+      const parsedGridHeight = parseInt(newGridHeight, 10);
+      setGridHeight(parsedGridHeight);
+      setRules((prev) => ({ ...prev, gridHeight: parsedGridHeight }));
+    },
+    [setRules]
+  );
 
-  const increaseHeight = () => {
+  const increaseHeight = useCallback(() => {
     if (gridHeight < maxH) {
       handleGridHeightChange(gridHeight + 1);
     } else {
       handleGridHeightChange(maxH);
     }
-  };
+  }, [gridHeight, maxH, handleGridHeightChange]);
 
-  const decreaseHeight = () => {
+  const decreaseHeight = useCallback(() => {
     if (gridHeight > 10) {
       handleGridHeightChange(gridHeight - 1);
     }
-  };
+  }, [gridHeight, handleGridHeightChange]);
 
   //Zmiana wielkości koórki - domyślnie 10
-  const handleCellSizeChange = (newCellSize) => {
-    const parsedCellSize = parseInt(newCellSize, 10);
-    setRules((prev) => ({ ...prev, cellSize: parsedCellSize }));
-  };
+  const handleCellSizeChange = useCallback(
+    (newCellSize) => {
+      const parsedCellSize = parseInt(newCellSize, 10);
+      setRules((prev) => ({ ...prev, cellSize: parsedCellSize }));
+    },
+    [setRules]
+  );
 
-  const increaseCellSize = () => {
+  const increaseCellSize = useCallback(() => {
     if (rules.cellSize < rules.maxCellSize) {
       if (gridHeight + rules.cellSize > maxH) {
         handleGridHeightChange(Math.floor((window.innerHeight - 50) / (rules.cellSize + 1)));
@@ -138,37 +148,40 @@ const Rules = ({ rules, setRules }) => {
       }
       handleCellSizeChange(rules.cellSize + 1);
     }
-  };
+  }, [rules.cellSize, rules.maxCellSize, gridHeight, gridWidth, maxH, maxW, handleGridHeightChange, handleGridWidthChange, handleCellSizeChange]);
 
-  const decreaseCellSize = () => {
+  const decreaseCellSize = useCallback(() => {
     if (rules.cellSize > rules.minCellSize) {
       handleCellSizeChange(rules.cellSize - 1);
     }
-  };
+  }, [rules.cellSize, rules.minCellSize, handleCellSizeChange]);
 
   //Zmiana szybkości działania
   const stepTimeTick = (Math.log(rules.maxTimeTick) - Math.log(rules.minTimeTick)) / 100; //Co ile ma się zwiększać/zmniejszać range z prędkością
 
-  const handleTimeTickChange = (value) => {
-    const linearValue = parseFloat(value);
-    const timeTick = Math.round(Math.exp(linearValue));
-    setRules((prev) => ({
-      ...prev,
-      timeTick: Math.min(Math.max(timeTick, rules.minTimeTick), rules.maxTimeTick),
-    }));
-  };
+  const handleTimeTickChange = useCallback(
+    (value) => {
+      const linearValue = parseFloat(value);
+      const timeTick = Math.round(Math.exp(linearValue));
+      setRules((prev) => ({
+        ...prev,
+        timeTick: Math.min(Math.max(timeTick, rules.minTimeTick), rules.maxTimeTick),
+      }));
+    },
+    [rules.minTimeTick, rules.maxTimeTick, setRules]
+  );
 
-  const increaseTimeTick = () => {
+  const increaseTimeTick = useCallback(() => {
     if (rules.timeTick < rules.maxTimeTick) {
       handleTimeTickChange(Math.log(rules.timeTick) + stepTimeTick);
     }
-  };
+  }, [rules.timeTick, rules.maxTimeTick, stepTimeTick, handleTimeTickChange]);
 
-  const decreaseTimeTick = () => {
+  const decreaseTimeTick = useCallback(() => {
     if (rules.timeTick > rules.minTimeTick) {
       handleTimeTickChange(Math.log(rules.timeTick) - stepTimeTick);
     }
-  };
+  }, [rules.timeTick, rules.minTimeTick, stepTimeTick, handleTimeTickChange]);
 
   const toggleGridLines = () => {
     setDrawGridLines(!drawGridLines);
@@ -178,36 +191,20 @@ const Rules = ({ rules, setRules }) => {
   //Obsługa skrótów klawiszowych
   useEffect(() => {
     const handleKeyDown = (e) => {
-      switch (e.key) {
-        case "6":
-          increaseWidth();
-          break;
-        case "4":
-          decreaseWidth();
-          break;
-        case "8":
-          increaseHeight();
-          break;
-        case "2":
-          decreaseHeight();
-          break;
-        case "7":
-          increaseCellSize();
-          break;
-        case "1":
-          decreaseCellSize();
-          break;
-        case "-":
-          increaseTimeTick();
-          break;
-        case "+":
-          decreaseTimeTick();
-          break;
-        case "=":
-          decreaseTimeTick();
-          break;
-        default:
-          break;
+      const actions = {
+        6: increaseWidth,
+        4: decreaseWidth,
+        8: increaseHeight,
+        2: decreaseHeight,
+        7: increaseCellSize,
+        1: decreaseCellSize,
+        "-": increaseTimeTick,
+        "+": decreaseTimeTick,
+        "=": decreaseTimeTick,
+      };
+
+      if (actions[e.key]) {
+        actions[e.key]();
       }
     };
 
@@ -221,7 +218,7 @@ const Rules = ({ rules, setRules }) => {
   return (
     <div className="rules">
       <label className="flex">
-        Prędkość: x{Math.round((1000 / rules.timeTick) * 100) / 100}/s
+        Prędkość: x{Math.round((1000 / rules.timeTick) * 100) / 100}
         {/* Prędkość: {rules.timeTick} */}
         <input
           className="range"

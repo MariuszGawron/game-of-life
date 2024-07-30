@@ -25,6 +25,7 @@ const App = () => {
       { threshold: 300, color: "#0000ff" },
       { threshold: 400, color: "#00ffff" },
       { threshold: 500, color: "#ffff00" },
+      { threshold: 600, color: "#000000" },
     ],
   });
 
